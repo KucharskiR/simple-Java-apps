@@ -22,7 +22,9 @@ public class ImageResizeThumbnailator {
 		double targetSizeInMB = 1.9;
 		int maxOutImageWidth = 8000;
 		int maxOutImgHeight = 8000;
-		String inputDir = "c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\";
+		
+		// Input/output directories paths
+		String inputDir = "";
 		String outputDir = inputDir + "resized";
 
 		File inputDirectory = new File(inputDir);
@@ -57,10 +59,10 @@ public class ImageResizeThumbnailator {
 	                	if(imgResultHeight > maxOutImgHeight)
 	                		imgResultHeight = maxOutImgHeight;
 	                	
-	                	
 	                	// Write image to file
 	                	BufferedImage outputImage = resizeImage(ImageIO.read(file), imgResultWidth, imgResultHeight);
 	                	ImageIO.write(outputImage, "jpg", new File(outputDirectory.toString(),file.getName()));
+	                	
 	                } catch (IOException e) {
 	                    e.printStackTrace();
 	                }
