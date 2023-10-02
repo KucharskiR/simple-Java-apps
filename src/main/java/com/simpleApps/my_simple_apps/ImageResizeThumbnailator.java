@@ -17,15 +17,18 @@ public class ImageResizeThumbnailator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		 File inputDirectory = new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\");
-	     File outputDirectory = new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\resized\\");
-//        BufferedImage originalImage = ImageIO.read(new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\AWICAM_LOGO.jpg"));
-//        BufferedImage outputImage = resizeImage(originalImage, 200, 200);
-//        ImageIO.write(outputImage, "jpg", new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\resized\\AWICAM_LOGO.jpg"));
-	     double targetSizeInMB = 1.9;
-	     int maxOutImageWidth = 8000;
-	     int maxOutImgHeight = 8000;
-	     resizeImages(inputDirectory, outputDirectory, maxOutImageWidth, maxOutImgHeight, targetSizeInMB);
+		
+		// Initial variables
+		double targetSizeInMB = 1.9;
+		int maxOutImageWidth = 8000;
+		int maxOutImgHeight = 8000;
+		String inputDir = "";
+		String outputDir = "";
+
+		File inputDirectory = new File(inputDir);
+		File outputDirectory = new File(outputDir);
+
+		resizeImages(inputDirectory, outputDirectory, maxOutImageWidth, maxOutImgHeight, targetSizeInMB);
 
 	}
 	

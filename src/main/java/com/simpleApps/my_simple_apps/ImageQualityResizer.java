@@ -18,9 +18,14 @@ public class ImageQualityResizer {
 	}
 
 	public static void main(String[] args) {
-        File inputDirectory = new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\");
-        File outputDirectory = new File("c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\resized\\");
-        double targetSizeInMB = 1.9;
+		
+		// Initial variables
+		double targetSizeInMB = 1.9;
+		String inputDir = "";
+		String outputDir = "";
+
+        File inputDirectory = new File(inputDir);
+        File outputDirectory = new File(outputDir);
 
         resizeImages(inputDirectory, outputDirectory, targetSizeInMB);
 
