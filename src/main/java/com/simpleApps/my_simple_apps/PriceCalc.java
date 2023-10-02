@@ -14,10 +14,13 @@ public class PriceCalc
         Scanner scanner = new Scanner(System.in);
         
      // Prompt the user to enter a double value
-        System.out.print("Enter percent for costs (eg. 25%): ");
+        System.out.print("Enter percent for gross costs (eg. 25%): ");
         
      // Read the user's input as a double
-        double inputPercentCosts = scanner.nextDouble()/100;
+        double inputPercentGrossCosts = scanner.nextDouble()/100;
+        
+        System.out.print("Enter percent for nest costs (eg. 25%): ");
+        double inputPercentNetCosts = scanner.nextDouble()/100;
         
         System.out.print("Enter percent profit (eg. 20%): ");
         double inputPercentProfit = scanner.nextDouble()/100;
@@ -43,7 +46,7 @@ public class PriceCalc
         
         while(error > 0.0001) {
             tempPrice = finalPrice;
-        	finalPrice = finalPrice*(inputPercentProfit + inputPercentCosts/1.23) + inputNetPrice;
+        	finalPrice = finalPrice*(inputPercentProfit + inputPercentGrossCosts/1.23 + inputPercentNetCosts) + inputNetPrice;
         	finalPrice *= 1.23;
         	error = Math.abs(finalPrice - tempPrice);
         	
