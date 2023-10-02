@@ -22,8 +22,8 @@ public class ImageResizeThumbnailator {
 		double targetSizeInMB = 1.9;
 		int maxOutImageWidth = 8000;
 		int maxOutImgHeight = 8000;
-		String inputDir = "";
-		String outputDir = "";
+		String inputDir = "c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\";
+		String outputDir = inputDir + "resized";
 
 		File inputDirectory = new File(inputDir);
 		File outputDirectory = new File(outputDir);
@@ -99,12 +99,23 @@ public class ImageResizeThumbnailator {
 		
 		// Loop for calculating final factor
 		while (error > 0.001) {
+			
+			double increment = 0.001;
+			
+			if (Math.abs(error) > 3)
+				increment = 0.2;
+			else if (Math.abs(error) > 1)
+				increment = 0.1;
+			else if (Math.abs(error) > 0)
+				increment = 0.001;
+			
 			if (error < 0)
-				factor -= 0.001;
+				factor -= increment;
 			else
-				factor += 0.001;
+				factor += increment;
 
 			error = compression - (imgWidth * factor * imgHeight * factor) / imageArea;
+			System.out.printf("Error: %.4f \n", error);
 		}
 		
 		// Print out input file name and result resizing factor
