@@ -116,7 +116,7 @@ public class ImageResizeThumbnailator {
 		double error = compression - ((double) imgWidth * factor * (double) imgHeight * factor) / imageArea;
 		
 		// Loop for calculating final factor
-		while (error > 0.001) {
+		while (Math.abs(error) > 0.001) {
 			
 			double increment = 0.001;
 			

@@ -19,12 +19,12 @@ public class ImageResizeThumbnailator {
 	public static void main(String[] args) throws Exception {
 		
 		// Initial variables
-		double targetSizeInMB = 1.9;
+		double targetSizeInMB = 0.1;
 		int maxOutImageWidth = 8000;
 		int maxOutImgHeight = 8000;
 		
 		// Input/output directories paths
-		String inputDir = "";
+		String inputDir = "c:\\Users\\Dell\\Documents\\KucharskiR_projects\\Downloads\\AWICAM_LOGO\\";
 		String outputDir = inputDir + "resized";
 
 		File inputDirectory = new File(inputDir);
@@ -100,13 +100,13 @@ public class ImageResizeThumbnailator {
 		double error = compression - ((double) imgWidth * factor * (double) imgHeight * factor) / imageArea;
 		
 		// Loop for calculating final factor
-		while (error > 0.001) {
+		while (Math.abs(error) > 0.001) {
 			
 			double increment = 0.001;
 			
 			if (Math.abs(error) > 3)
 				increment = 0.2;
-			else if (Math.abs(error) > 1)
+			else if (Math.abs(error) > 0.5)
 				increment = 0.1;
 			else if (Math.abs(error) > 0)
 				increment = 0.001;
