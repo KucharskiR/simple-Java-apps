@@ -19,7 +19,7 @@ public class PriceCalc
      // Read the user's input as a double
         double inputPercentGrossCosts = scanner.nextDouble()/100;
         
-        System.out.print("Enter percent for nest costs (eg. 25%): ");
+        System.out.print("Enter percent for net costs (eg. 25%): ");
         double inputPercentNetCosts = scanner.nextDouble()/100;
         
         System.out.print("Enter percent profit (eg. 20%): ");
