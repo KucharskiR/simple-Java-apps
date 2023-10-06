@@ -9,7 +9,7 @@ This repository contains my simple applications written in Java.
  - [ImageResizeThumbnailator](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/ImageResizeThumbnailator.java) - resizes all images in a given folder so that they have an output size (in mb) as indicated on the input. Resized files are saved in a separate defined folder
  - [ImageQualityResizer](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/ImageQualityResizer.java) - similar to ImageResizeThumbnailator but manipulate only the quality of image (not resize)
  - [PriceCalc](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/PriceCalc.java) - an application that calculates the gross final price of a product by taking into account the expected return on sales (e.g., 20% of the sales revenue) and percentage costs
-
+ - [PriceCalcMany](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/PriceCalcMany.java) - other version of PriceCalc. Do not enter expected return percent. App will calculate many final prices for values from 0% to 20% with step 1%
 
 ## Usage/Examples
 
