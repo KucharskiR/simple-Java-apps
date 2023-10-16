@@ -19,40 +19,49 @@ import org.w3c.dom.NodeList;
 
 public class ModifyXMLMany {
 	
-	private static int counter = 0;
-	private static int listsSize = 0;
+	private static int counterEans = 0;
+	private static int counterCsvFiles = 0;
+	private static int eansListSize = 0;
 
 	public ModifyXMLMany() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {
-		String filePath = "c:\\Users\\Dell\\Documents\\KucharskiR_projects\\simpleApps\\my-simple-apps\\csv\\";
-		
-		String baseName = "koty-akcesoria-i-suplementy-drapaki-dla-kota";
-		
-		String fileNameEans = baseName
-							+ "-Eans"
-							+ ".csv";
-		String fileNameSkus = baseName
-							+ "-ProductCodes"
-							+ ".csv";
-		File inputFile = new File("c:\\Users\\Dell\\Downloads\\BL__Produkty__domylny_XML_2023-10-13_14_10.xml");
+		String filePath = "c:\\Users\\Dell\\Documents\\KucharskiR_projects\\drop\\csv\\";
+
 		// Values
-		String category = "Drapaki dla kotów";
-		
-		LinkedList<String> listEans = CSVReaderList(filePath, fileNameEans);
-		LinkedList<String> listSkus = CSVReaderList(filePath, fileNameSkus);
-		
-		listsSize = listEans.size() + listSkus.size();
-		
-		System.out.printf("All list size: %d \n", listsSize);
-		
-		for (String findByValue : listEans) {
-			ModifyXMLEans(inputFile, findByValue, category);
-		}
-		for (String findByValue : listSkus) {
-			ModifyXMLSkus(inputFile, findByValue, category);
+		String category = "Sucha karma dla psów";
+		String baseName = "psy-przysmaki";
+
+		String fileNameEans = baseName + "-Eans" + ".csv";
+		String fileNameSkus = baseName + "-ProductCodes" + ".csv";
+		File inputFile = new File("c:\\Users\\Dell\\Downloads\\BL__Produkty__domylny_XML_2023-10-16_13_34.xml");
+
+		LinkedList<CSVFileElement> listFiles = CSVFilesReader(filePath, "files.csv");
+
+		for (CSVFileElement csvFileElement : listFiles) {
+			
+
+			fileNameEans = csvFileElement.getFileName() + "-Eans.csv";
+			fileNameSkus = csvFileElement.getFileName() + "-ProductCodes.csv";
+			category = csvFileElement.getCategoryName();
+
+			LinkedList<String> listEans = CSVReaderList(filePath, fileNameEans);
+			LinkedList<String> listSkus = CSVReaderList(filePath, fileNameSkus);
+
+			eansListSize = listEans.size() + listSkus.size();
+
+			System.out.printf("All list size: %d \n", eansListSize);
+			counterEans = 0;
+			System.out.printf("\n \t \t \t Files progress: %2.1f%% \n\n", (double) ++counterCsvFiles * 100 / listFiles.size());
+
+			for (String findByValue : listEans) {
+				ModifyXMLEans(inputFile, findByValue, category);
+			}
+			for (String findByValue : listSkus) {
+				ModifyXMLSkus(inputFile, findByValue, category);
+			}
 		}
 
 	}
@@ -96,6 +105,52 @@ public class ModifyXMLMany {
 			
 			return list;
 
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found: " + filePath);
+			e.printStackTrace();
+			return list;
+		}
+	}
+	private static LinkedList<CSVFileElement> CSVFilesReader(String filePath, String fileName) {
+		// Specify the path to your CSV file
+		
+		LinkedList<CSVFileElement> list = new LinkedList<CSVFileElement>();
+		
+		try {
+			// Create a Scanner object to read the file
+			Scanner scanner = new Scanner(new File(filePath + fileName));
+			
+			while (scanner.hasNextLine()) {
+				// Read the line
+				String line = scanner.nextLine();
+				
+				// Split the line using ","
+				String[] values = line.split(",");
+				
+				// Remove spaces from each value
+				for (int i = 0; i < values.length; i += 2) {
+					values[i] = values[i].trim();
+					values[i+1] = values[i+1].trim();
+					
+					// Add to list. Remove empty values
+					if (!values[i].equals(""))
+						list.add(new CSVFileElement(values[i], values[i+1]));
+				}
+				
+			}
+			// Print the values
+			for (CSVFileElement value : list) {
+				System.out.println(value);
+			}
+			
+			// Print list size
+			System.out.println("List size: " + list.size());
+			
+			// Close the scanner
+			scanner.close();
+			
+			return list;
+			
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found: " + filePath);
 			e.printStackTrace();
@@ -173,11 +228,39 @@ public class ModifyXMLMany {
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
 
-			System.out.printf("XML file updated successfully! Number: %d \t Percent: %2.1f%% \n", ++counter, (double) 100*counter/listsSize);
+			System.out.printf("XML file updated successfully! Number: %d \t Percent: %2.1f%% \n", ++counterEans, (double) 100*counterEans/eansListSize);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+}
+
+class CSVFileElement{
+	String fileName;
+	String categoryName;
+	
+	public CSVFileElement(String fileName, String categoryName) {
+		super();
+		this.fileName = fileName;
+		this.categoryName = categoryName;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	@Override
+	public String toString() {
+		return "CSVFileElement [fileName=" + fileName + ", categoryName=" + categoryName + "]";
+	}
+	
 }

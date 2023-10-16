@@ -24,7 +24,7 @@ public class PriceCalcMany
         double inputPercentNetCosts = scanner.nextDouble()/100;
         
        // System.out.print("Enter percent profit (eg. 20%): ");
-        double inputPercentProfit = 0 / 100;
+        double inputPercentProfit = 0;
         
         double inputNetPrice;
         while (true) {
@@ -36,10 +36,11 @@ public class PriceCalcMany
         
         // Vat 
 //        double vat = 0.23;
-        double vat = 0.08;
+        double vat = 0.23;
         
         // Value in % of increase profit percent every while step
         int profitPercentIncrease = 1;
+        inputPercentProfit = -0.01;
         
         // Value in % of maximal profit percent to calculate in while loop
         int maxProfitPercentToCalculate = 15;
