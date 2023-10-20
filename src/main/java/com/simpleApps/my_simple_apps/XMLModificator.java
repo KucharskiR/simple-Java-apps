@@ -71,8 +71,7 @@ public class XMLModificator {
 
 	}
 
-	private static void updateXMLNodeValue(Document doc, String changedValue, String newValue, 
-																	String searchBy, String change) {
+	private static void updateXMLNodeValue(Document doc, String changedValue, String newValue, String searchBy, String change) {
 		NodeList productList = doc.getElementsByTagName("product");
 
 		for (int i = 0; i < productList.getLength(); i++) {
