@@ -10,6 +10,11 @@ This repository contains my simple applications written in Java.
  - [ImageQualityResizer](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/ImageQualityResizer.java) - similar to ImageResizeThumbnailator but manipulate only the quality of image (not resize)
  - [PriceCalc](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/PriceCalc.java) - an application that calculates the gross final price of a product by taking into account the expected return on sales (e.g., 20% of the sales revenue) and percentage costs
  - [PriceCalcMany](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/PriceCalcMany.java) - other version of PriceCalc. Do not enter expected return percent. App will calculate many final prices for values from 0% to 20% with step 1%
+ - [CSVReader](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/CSVReader.java) - reads data from .csv file and return LinkedList<String>
+ - [JSONParser](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/JSONParser.java) - JSON parser using jsoup. Connect to the specified URL, look for data, collect it and return it.
+ - [ModifyXML](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/ModifyXML.java) - uses w3c dom to modify xml files. Searches for nodes based on the indicated attribute value, then modifies another indicated node attribute
+ - [EANExtractor](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/EANExtractor.java) - uses JSON parsing (jsoup) to search for and retrieve EAN numbers of products, then exports them as a list.
+ - [XMLModificator](https://github.com/KucharskiR/simple-Java-apps/blob/main/src/main/java/com/simpleApps/my_simple_apps/XMLModificator.java) - W3C DOM XML parser used to modify XML file. App is searching the specified data in first .xml file and make modification in the second .xml file
 
 ## Usage/Examples
 

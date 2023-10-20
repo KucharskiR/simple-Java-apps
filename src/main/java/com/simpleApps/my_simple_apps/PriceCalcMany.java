@@ -35,8 +35,8 @@ public class PriceCalcMany
         }
         
         // Vat 
+        double vat = 0.08;
 //        double vat = 0.23;
-        double vat = 0.23;
         
         // Value in % of increase profit percent every while step
         int profitPercentIncrease = 1;
