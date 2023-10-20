@@ -51,20 +51,14 @@ public class SelectRowInOrderXML {
                 if (currentOrderId.equals(orderId)) {
                     // Select the specified row in the rows of the current order
                     NodeList rows = orderElement.getElementsByTagName("rows");
-                    System.out.println(orderElement.getChildNodes());
-                    System.out.printf("Debug rows: " +  rows.item(0));
                     if (rows.getLength() > 0) {
                         Element rowsElement = (Element) rows.item(0);
 
                         NodeList rowList = rowsElement.getElementsByTagName("row");
-                        System.out.println(rowList.getLength());
-                        System.out.println(rowList.item(0).toString());
                         for (int j = 0; j < rowList.getLength(); j++) {
                             Element rowElement = (Element) rowList.item(j);
-                            System.out.println(rowElement.toString());
 
                             // Get the row name
-//                            String currentRowName = rowElement.getAttribute("name");
                             String rowName = rowElement.getElementsByTagName("name").item(0).getTextContent();
 
                             // Check if the current row matches the specified row name

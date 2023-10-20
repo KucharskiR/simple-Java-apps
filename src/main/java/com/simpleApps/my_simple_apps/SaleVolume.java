@@ -2,7 +2,9 @@ package com.simpleApps.my_simple_apps;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,12 +31,18 @@ public class SaleVolume {
 		String inputCSVFileName = "sprzedaz2.csv";
 		
 		// Generate linked list of CSV elements
-		LinkedList<SalePOJO> csvList = CSVReaderListExport(inputCSVFilePath, inputCSVFileName);
+		LinkedList<CSVRecordPOJO> csvList = CSVReaderListExport(inputCSVFilePath, inputCSVFileName);
+		
+		LinkedList<CSVRecordPOJO> csvListBig = searchBig(csvList);
+		
+		for (CSVRecordPOJO csvRecordPOJO : csvListBig) {
+			System.out.println(csvRecordPOJO.toString());
+		}
 		
 		double saleCumulate = 0;
 		int saleVolumeCumulate = 0;
 		
-		for (SalePOJO salePOJO : csvList) {
+		for (CSVRecordPOJO salePOJO : csvList) {
 			
 			int saleVolume = Integer.parseInt(salePOJO.getBeforeVolume()) - Integer.parseInt(salePOJO.getAfterVolume());
 			
@@ -55,6 +63,41 @@ public class SaleVolume {
 
 	}
 	
+	private static LinkedList<CSVRecordPOJO> searchBig(LinkedList<CSVRecordPOJO> csvList) {
+		LinkedList<CSVRecordPOJO> outputList = new LinkedList<>();
+		List<String> skus = new ArrayList<String>();
+		
+		for (CSVRecordPOJO csvRecordPOJO : csvList) {
+			boolean set = true;
+			if (!skus.isEmpty()) {
+				for (String string : skus) {
+					if (string.equals(csvRecordPOJO.getSku())){
+						set = false;
+						break;
+					}
+				}
+				if (set)
+					skus.add(csvRecordPOJO.getSku());
+				
+			} else
+				skus.add(csvRecordPOJO.getSku());
+		}
+		
+		for (String sku : skus) {
+			CSVRecordPOJO newElement = new CSVRecordPOJO(null, null, "0", "0");
+			for (CSVRecordPOJO csvRecordPOJO : csvList) {
+				if (csvRecordPOJO.getSku().equals(sku)) {
+					newElement.setDate(csvRecordPOJO.getDate());
+					newElement.setSku(csvRecordPOJO.getSku());
+					newElement.setResult(newElement.getResult() + csvRecordPOJO.getResult());
+				}
+			}
+			outputList.add(newElement);
+		}
+		
+		return outputList;
+	}
+
 	private static double getSkuPrice(String sku) {
 		double outputPrice = 0;
 		try {
@@ -88,10 +131,10 @@ public class SaleVolume {
 		return outputPrice;
 	}
 
-	private static LinkedList<SalePOJO> CSVReaderListExport(String filePath, String fileName) {
+	private static LinkedList<CSVRecordPOJO> CSVReaderListExport(String filePath, String fileName) {
 		// Specify the path to your CSV file
 		
-		LinkedList<SalePOJO> list = new LinkedList<SalePOJO>();
+		LinkedList<CSVRecordPOJO> list = new LinkedList<CSVRecordPOJO>();
 		
 		try {
 			// Create a Scanner object to read the file
@@ -113,12 +156,12 @@ public class SaleVolume {
 					
 					// Add to list. Remove empty values
 					if (!values[i].equals(""))
-						list.add(new SalePOJO(values[i], values[i+1], values[i+2], values[i+3]));
+						list.add(new CSVRecordPOJO(values[i], values[i+1], values[i+2], values[i+3]));
 				}
 				
 			}
 			// Print the values
-			for (SalePOJO value : list) {
+			for (CSVRecordPOJO value : list) {
 				System.out.println(value);
 			}
 			
@@ -139,18 +182,22 @@ public class SaleVolume {
 
 }
 
-class SalePOJO {
+class CSVRecordPOJO {
 	private String date;
 	private String sku;
 	private String beforeVolume;
 	private String afterVolume;
+	private int result;
 
-	public SalePOJO(String date, String sku, String beforeVolume, String afterVolume) {
+	
+
+	public CSVRecordPOJO(String date, String sku, String beforeVolume, String afterVolume) {
 		super();
 		this.date = date;
 		this.sku = sku;
 		this.beforeVolume = beforeVolume;
 		this.afterVolume = afterVolume;
+		this.result = Integer.parseInt(beforeVolume) - Integer.parseInt(afterVolume);
 	}
 
 	public String getDate() {
@@ -184,11 +231,20 @@ class SalePOJO {
 	public void setAfterVolume(String afterVolume) {
 		this.afterVolume = afterVolume;
 	}
+	
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
 
 	@Override
 	public String toString() {
-		return "SalePOJO [date=" + date + ", sku=" + sku + ", beforeVolume=" + beforeVolume + ", afterVolume="
-				+ afterVolume + "]";
+		return "CSVRecordPOJO [date=" + date + ", sku=" + sku + ", beforeVolume=" + beforeVolume + ", afterVolume="
+				+ afterVolume + ", result=" + result + "]";
 	}
+
 
 }
