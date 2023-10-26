@@ -39,7 +39,7 @@ public class SerialCommunication {
 		
         Scanner scanner = new Scanner(System.in);
         
-        System.out.print("Choose:\n[1] Sending \n [2] Receiving \n");
+        System.out.print("Choose:\n1-Sending \n2-Receiving \n");
         
         int input = scanner.nextInt();
         
