@@ -38,6 +38,8 @@ public class PriceCalcMany
         double vat = 0.08;
 //        double vat = 0.23;
         
+        System.out.printf("Vat: %2.0f%%  \n", vat * 100);
+        
         // Value in % of increase profit percent every while step
         int profitPercentIncrease = 1;
         inputPercentProfit = -0.01;
@@ -51,7 +53,7 @@ public class PriceCalcMany
 			double error = 1;
 			double finalPrice = inputNetPrice * 1.5;
 
-			while (error > 0.0001) {
+			while (error > 0.001) {
 				tempPrice = finalPrice;
 				finalPrice = finalPrice * (inputPercentProfit + inputPercentGrossCosts / 1.23 + inputPercentNetCosts)
 						+ inputNetPrice;

@@ -40,11 +40,11 @@
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.5</version>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>org.knowhowlab.comm</groupId>
 			<artifactId>org.knowhowlab.comm.rxtx-patched</artifactId>
 			<version>0.2</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.fazecast</groupId>
 			<artifactId>jSerialComm</artifactId>
