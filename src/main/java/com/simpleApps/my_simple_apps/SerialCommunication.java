@@ -25,8 +25,13 @@ public class SerialCommunication {
 	private static final int USB_ESP_OK = 0x16;
 	private static final int USB_ESP_ERROR = 0x17;
 	
-	private static enum Error {ERROR_RECEIVING, ERROR_SEND, ERROR_RECEIVING_OK, ERROR_SEND_TIME, ERROR_ESP_NOT_SEND_OK, ERROR_FROM_ESP, ERROR_OPEN_SERIAL};
+	private static enum Error {ERROR_RECEIVING, ERROR_SEND, ERROR_RECEIVING_OK, ERROR_SEND_TIME, ERROR_ESP_NOT_SEND_OK, ERROR_FROM_ESP, ERROR_OPEN_SERIAL, ERROR_WAITING_ESP};
 	private static enum Success {SUCCESS_RECEIVED, SUCCESS_SEND, SUCCESS_RECEIVED_OK};
+	
+	private static final byte[] END_OF_DATA = new byte[]{
+			(byte) END_OF_DATA1, 
+			(byte) END_OF_DATA2, 
+			(byte) END_OF_DATA3};
 	
 	private String portName;
 	private int baudRate;
@@ -183,11 +188,7 @@ public class SerialCommunication {
 							}
 
 							// Send END OF DATA
-							byte[] endTable = new byte[3];
-							endTable[0] = (byte) END_OF_DATA1;
-							endTable[1] = (byte) END_OF_DATA2;
-							endTable[2] = (byte) END_OF_DATA3;
-							outputStream.write(endTable);
+							outputStream.write(END_OF_DATA);
 							
 							// Waiting loop for data from ESP
 							while (inputStream.available() == 0) {
@@ -203,7 +204,7 @@ public class SerialCommunication {
 								bytesRead = bufferIn[1];
 								System.out.println(Arrays.toString(bufferIn));
 
-								switch (bytesRead) {
+								switch (waitForESP(inputStream)) {
 								case USB_ESP_OK:
 									success(Success.SUCCESS_SEND);
 									break;
@@ -247,6 +248,29 @@ public class SerialCommunication {
 	}
 
 
+	private int waitForESP(InputStream inputStream) {
+		int bytesRead;
+		
+		try {
+			// Waiting loop for data from ESP
+			while (inputStream.available() == 0) {
+				System.out.println(inputStream.available());
+			}
+
+			int availableBytes = inputStream.available();
+			byte[] bufferIn = new byte[availableBytes];
+//			bytesRead = ByteBuffer.wrap(bufferIn).getInt();
+			inputStream.read(bufferIn);
+			bytesRead = (int) bufferIn[1];
+			System.out.println(Arrays.toString(bufferIn));
+		} catch (IOException e) {
+			error(Error.ERROR_WAITING_ESP);
+			bytesRead = 0;
+			e.printStackTrace();
+		}
+		return bytesRead;
+	}
+
 	private void error(Error error) {
 		//TODO: Error procedure to write
 		consoleOutput("error");
@@ -271,6 +295,9 @@ public class SerialCommunication {
 			break;
 		case ERROR_OPEN_SERIAL:
 			System.out.println("Can not open serial port");
+			break;
+		case ERROR_WAITING_ESP:
+			System.out.println("Error during waiting for ESP response");
 			break;
 			
 		default:
