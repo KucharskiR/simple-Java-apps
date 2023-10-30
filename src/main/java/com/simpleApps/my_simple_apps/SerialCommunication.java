@@ -19,19 +19,15 @@ public class SerialCommunication {
 	
 	private static final int USB_COMMAND_SEND_LD = 0x11;
 	private static final int USB_COMMAND_RECEIVE_LD = 0x12;
-	private static final int END_OF_DATA1 = 0xff;
-	private static final int END_OF_DATA2 = 0xfe;
-	private static final int END_OF_DATA3 = 0xff;
 	private static final int USB_ESP_OK = 0x16;
 	private static final int USB_ESP_ERROR = 0x17;
 	
-	private static enum Error {ERROR_RECEIVING, ERROR_SEND, ERROR_RECEIVING_OK, ERROR_SEND_TIME, ERROR_ESP_NOT_SEND_OK, ERROR_FROM_ESP, ERROR_OPEN_SERIAL, ERROR_WAITING_ESP};
+	private static final int TIMEOUT = 10000; // Timeout response from device
+	
+	private static enum Error {ERROR_RECEIVING, ERROR_SEND, ERROR_RECEIVING_OK, ERROR_SEND_TIME, ERROR_ESP_NOT_SEND_OK, ERROR_FROM_ESP, ERROR_OPEN_SERIAL, ERROR_WAITING_ESP, ERROR_RESPONSE_TIMEOUT};
 	private static enum Success {SUCCESS_RECEIVED, SUCCESS_SEND, SUCCESS_RECEIVED_OK};
 	
-	private static final byte[] END_OF_DATA = new byte[]{
-			(byte) END_OF_DATA1, 
-			(byte) END_OF_DATA2, 
-			(byte) END_OF_DATA3};
+	private static final byte[] END_OF_DATA = new byte[]{(byte) 0xff, (byte) 0xfe, (byte) 0xff};
 	
 	private String portName;
 	private int baudRate;
@@ -154,22 +150,22 @@ public class SerialCommunication {
 					// USB_ESP_OK
 					try {
 						
-						// Waiting loop for data from ESP
-						while (inputStream.available() == 0) {
-							System.out.println(inputStream.available());
-						}
-
-						int availableBytes = inputStream.available();
-						System.out.println("Available bytes: " + availableBytes);
-						byte[] bufferIn = new byte[availableBytes];
-
-						System.out.println(inputStream.read(bufferIn));
-						System.out.println("Buffer in: " + Arrays.toString(bufferIn));
-						int bytesRead = bufferIn[bufferIn.length-2];
-						System.out.println(bytesRead);
+//						// Waiting loop for data from ESP
+//						while (inputStream.available() == 0) {
+//							System.out.println(inputStream.available());
+//						}
+//
+//						int availableBytes = inputStream.available();
+//						System.out.println("Available bytes: " + availableBytes);
+//						byte[] bufferIn = new byte[availableBytes];
+//
+//						System.out.println(inputStream.read(bufferIn));
+//						System.out.println("Buffer in: " + Arrays.toString(bufferIn));
+//						int bytesRead = bufferIn[bufferIn.length-2];
+//						System.out.println(bytesRead);
 						
 						// If response from ESP is OK than go into sending file block
-						if (bytesRead == USB_ESP_OK) {
+						if (responseFromESP(inputStream) == USB_ESP_OK) {
 							success(Success.SUCCESS_RECEIVED_OK);
 
 							// Sending file procedure
@@ -190,21 +186,21 @@ public class SerialCommunication {
 							// Send END OF DATA
 							outputStream.write(END_OF_DATA);
 							
-							// Waiting loop for data from ESP
-							while (inputStream.available() == 0) {
-								System.out.println(inputStream.available());
-							}
+//							// Waiting loop for data from ESP
+//							while (inputStream.available() == 0) {
+//								System.out.println(inputStream.available());
+//							}
 
 							try {
 
-								availableBytes = inputStream.available();
-								bufferIn = new byte[availableBytes];
-//								bytesRead = ByteBuffer.wrap(bufferIn).getInt();
-								inputStream.read(bufferIn);
-								bytesRead = bufferIn[1];
-								System.out.println(Arrays.toString(bufferIn));
+//								availableBytes = inputStream.available();
+//								bufferIn = new byte[availableBytes];
+////								bytesRead = ByteBuffer.wrap(bufferIn).getInt();
+//								inputStream.read(bufferIn);
+//								bytesRead = bufferIn[1];
+//								System.out.println(Arrays.toString(bufferIn));
 
-								switch (waitForESP(inputStream)) {
+								switch (responseFromESP(inputStream)) {
 								case USB_ESP_OK:
 									success(Success.SUCCESS_SEND);
 									break;
@@ -248,24 +244,38 @@ public class SerialCommunication {
 	}
 
 
-	private int waitForESP(InputStream inputStream) {
+	private int responseFromESP(InputStream inputStream) {
 		int bytesRead;
-		
+		long startTime = System.currentTimeMillis();
+		int counter = 0;
+
 		try {
 			// Waiting loop for data from ESP
 			while (inputStream.available() == 0) {
-				System.out.println(inputStream.available());
+//				System.out.println(inputStream.available());
+				counter++;
+				if (counter > 15) {
+					if (System.currentTimeMillis() >= (startTime + TIMEOUT)) {
+						error(Error.ERROR_RESPONSE_TIMEOUT);
+						break;
+					}
+					counter = 0;
+				}
 			}
 
 			int availableBytes = inputStream.available();
-			byte[] bufferIn = new byte[availableBytes];
-//			bytesRead = ByteBuffer.wrap(bufferIn).getInt();
-			inputStream.read(bufferIn);
-			bytesRead = (int) bufferIn[1];
-			System.out.println(Arrays.toString(bufferIn));
+			
+			if (availableBytes > 0) {
+				byte[] bufferIn = new byte[availableBytes];
+				inputStream.read(bufferIn);
+				bytesRead = (int) bufferIn[1];
+				System.out.println(Arrays.toString(bufferIn));
+			} else {
+				bytesRead = -1;
+			}
 		} catch (IOException e) {
 			error(Error.ERROR_WAITING_ESP);
-			bytesRead = 0;
+			bytesRead = -1;
 			e.printStackTrace();
 		}
 		return bytesRead;
@@ -298,6 +308,9 @@ public class SerialCommunication {
 			break;
 		case ERROR_WAITING_ESP:
 			System.out.println("Error during waiting for ESP response");
+			break;
+		case ERROR_RESPONSE_TIMEOUT:
+			System.out.println("Response from the device timeout");
 			break;
 			
 		default:
