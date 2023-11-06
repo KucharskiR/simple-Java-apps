@@ -37,7 +37,6 @@ public class SerialCommunication {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		// Create a Scanner object to read user input
 		
 		SerialCommunication serialConnection = new SerialCommunication("COM4");
@@ -82,28 +81,35 @@ public class SerialCommunication {
 
 					// Sending start command to ESP
 					outputStream.write(USB_COMMAND_RECEIVE_LD);
-
+					System.out.println("Command receive to esp");
+					
 //					int availableBytes = inputStream.available();
 //					byte[] bufferIn = new byte[availableBytes];
 //					int bytesRead = ByteBuffer.wrap(bufferIn).getInt();
+					
+//					TimeUnit.MILLISECONDS.sleep(2);
 
 					if (Arrays.equals(responseFromESP(inputStream), USB_ESP_OK)) {
+						
+						System.out.println("test");
 
 						// Define a buffer for receiving data
 						byte[] buffer = new byte[64];
 
 						int bytesRead;
-					
-						if (responseFromESP(inputStream) != null) {
+						
+						
+//						if (responseFromESP(inputStream) != null) {
 
 							// Read and write the file data
 							while ((bytesRead = inputStream.read(buffer)) != -1) {
 								System.out.println("Reading " + bytesRead + " bytes");
+								System.out.println(Arrays.toString(buffer));
 //						fileOutputStream.write(buffer, 0, bytesRead);
-								fileOutputStream.write(new byte[bytesRead], 0, bytesRead);
-								TimeUnit.MILLISECONDS.sleep(1);
+								fileOutputStream.write(buffer, 0, bytesRead);
 							}
-						}
+							//TODO: obsługa błędów + odczyt ostatnich trzech bajtów (ESP OK)
+//						}
 					
 				} else 
 					error(Error.ERROR_ESP_NOT_SEND_OK);
@@ -274,6 +280,7 @@ public class SerialCommunication {
 			}
 
 			int availableBytes = inputStream.available();
+			System.out.println("available bytes: " + availableBytes);
 
 			byte[] bufferIn = new byte[availableBytes];
 			inputStream.read(bufferIn);
@@ -289,7 +296,6 @@ public class SerialCommunication {
 	}
 
 	private void error(Error error) {
-		//TODO: Error procedure to write
 		consoleOutput("error");
 		switch (error) {
 		case ERROR_SEND:
@@ -326,7 +332,6 @@ public class SerialCommunication {
 	}
 	
 	private void success(Success success) {
-		//TODO: Success procedure to write
 //		consoleOutput("success");
 		switch (success) {
 		case SUCCESS_SEND:

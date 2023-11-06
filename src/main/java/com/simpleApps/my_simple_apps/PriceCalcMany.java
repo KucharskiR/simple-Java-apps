@@ -14,6 +14,12 @@ public class PriceCalcMany
     	// Create a Scanner object to read user input
         Scanner scanner = new Scanner(System.in);
         
+        // Prompt the user to enter a double value
+        System.out.print("Enter VAT (eg. 8%): ");
+        
+        // Read the user's input as a double
+        double vat = scanner.nextDouble()/100;
+        
      // Prompt the user to enter a double value
         System.out.print("Enter percent for gross costs (eg. 25%): ");
         
@@ -35,7 +41,7 @@ public class PriceCalcMany
         }
         
         // Vat 
-        double vat = 0.08;
+//        double vat = 0.08;
 //        double vat = 0.23;
         
         System.out.printf("Vat: %2.0f%%  \n", vat * 100);
