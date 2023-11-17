@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Random;
 
 public class RandomDataCsvGenerator {
+	
+	private static int rows = 10000;
 
 	public RandomDataCsvGenerator() {
 		// TODO Auto-generated constructor stub
@@ -22,7 +24,7 @@ public class RandomDataCsvGenerator {
             Random random = new Random();
 
             // Generate data rows
-            for (int i = 0; i < 100; i++) { // Change 100 to the number of rows you want
+            for (int i = 0; i < rows; i++) { // Change 100 to the number of rows you want
                 for (int j = 0; j < 10; j++) {
                     double randomDouble = random.nextDouble() * 100; // Adjust the range if needed
                     writer.append(String.valueOf(randomDouble));
