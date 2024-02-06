@@ -122,7 +122,7 @@ public class SerialCommunication {
 					error(Error.ERROR_OPEN_SERIAL);
 					throw new IOException();
 				}
-				System.out.println("File received successfully.");
+				System.out.println("File received successfully");
 			} catch (Exception e) {
 				e.printStackTrace();
 				error(Error.ERROR_RECEIVING);
